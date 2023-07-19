@@ -1,0 +1,22 @@
+﻿@model List<Category>
+
+@{
+    Layout = "_LayoutAdmin";
+}
+
+<a asp-controller="admin" asp-action="AddCategory" class="btn btn-primary">Add new</a>
+
+<div class="list-group">
+    @foreach (var c in Model)
+    {
+        <div class="list-group-item list-group-item-action list-group-item-dark my-1 px-1">
+            <span>Category Name: @c.Name</span>
+            <span>
+                <a class="btn btn-primary">Edit</a>
+                <a class="btn btn-primary" href="@Url.Action("DeleteCategory","Admin",new {c.Id})">Delete</a>
+            </span>
+            
+        </div>
+
+    }
+</div>

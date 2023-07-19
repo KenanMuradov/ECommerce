@@ -1,0 +1,10 @@
+﻿@model Tag
+
+@{
+    Layout = "_LayoutAdmin";
+}
+
+<form class="input-group" asp-controller="admin" asp-action="AddTag" method="post">
+    <input type="text" asp-for="@Model.Name" class="form-control col-9" placeholder="Tag Name" />
+    <input type="submit" class="btn btn-primary form-control col-3" value="Add" />
+</form>

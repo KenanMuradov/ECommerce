@@ -1,0 +1,9 @@
+﻿@model Category
+@{
+    Layout = "_LayoutAdmin";
+}
+
+<form class="input-group" asp-controller="admin" asp-action="AddCategory" method="post">
+    <input type="text" asp-for="@Model.Name" class="form-control col-9" placeholder="Category Name" />
+    <input type="submit" class="btn btn-primary form-control col-3" value="Add" />
+</form>

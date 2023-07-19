@@ -1,0 +1,16 @@
+﻿@model AddProductViewModel
+
+@{
+    Layout = "_LayoutAdmin";
+}
+
+<form asp-action="AddProduct" asp-controller="Admin" method="post" enctype="multipart/form-data">
+    <input asp-for="Name" placeholder="Name" /> <br />
+    <textarea asp-for="Description" placeholder="Description...."></textarea> <br />
+    <input type="file" asp-for="ImageUrl" /><br />
+    <select asp-for="CategoryId" asp-items="@ViewBag.Categories"></select> <br />
+    <select multiple style="width:350px" asp-for="TagIds" asp-items="@ViewBag.Tags"></select>
+    <input type="submit" />
+</form>
+
+

@@ -1,0 +1,16 @@
+﻿@model List<Product>
+
+@{
+    Layout = "_LayoutAdmin";
+}
+
+@foreach (var item in Model)
+{
+    <span>item.Name</span>
+    <span>item.Description</span>
+    <span>item.Category.Name</span>
+    foreach(var t in item.ProductTags)
+    {
+        <span>t.Tag.Name</span>
+    }
+}
