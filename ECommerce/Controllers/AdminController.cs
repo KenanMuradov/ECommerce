@@ -1,4 +1,5 @@
-﻿using ECommerce.Data;
+﻿using AutoMapper;
+using ECommerce.Data;
 using ECommerce.Helpers;
 using ECommerce.Models;
 using ECommerce.Models.ViewModels;
@@ -10,10 +11,12 @@ namespace ECommerce.Controllers
     public class AdminController : Controller
     {
         private readonly AppDbContext context;
+        private static IMapper _mapper;
 
-        public AdminController(AppDbContext context)
+        public AdminController(AppDbContext context, IMapper mapper)
         {
             this.context = context;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -53,50 +56,57 @@ namespace ECommerce.Controllers
         {
             try
             {
-                string path = await UploadFileHelper.UploadFile(model.ImageUrl);
+                    string path = await UploadFileHelper.UploadFile(model.ImageUrl);
 
-                Product product = new()
-                {
-                    Name = model.Name,
-                    Description = model.Description,
-                    ImageUrl = path,
-                    CategoryId = model.CategoryId,
-                };
+                    Product product = _mapper.Map<Product>(model);
+                    product.ImageUrl = path;
 
-                context.Add(product);
-                await context.SaveChangesAsync();
+                    context.Add(product);
+                    await context.SaveChangesAsync();
 
-                foreach (var tag in model.TagIds)
-                {
-                    context.Add(new ProductTag { TagId = tag, ProductId = product.Id });
-                }
 
-                await context.SaveChangesAsync();
+                    foreach (var tag in model.TagIds)
+                    {
+                        context.Add(new ProductTag { TagId = tag, ProductId = product.Id });
+                    }
 
-                return View("Index");
+                    await context.SaveChangesAsync();
+
+                    return View("Products", context.Products.ToList());
             }
             catch (Exception)
             {
-
-                return View("error.cshtml");
+                return View("Error", new ErrorViewModel());
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCategory(Category category)
+        public async Task<IActionResult> AddCategory(AddCategoryViewModel category)
         {
+            if(ModelState.IsValid)
+            {
+                var c = _mapper.Map<Category>(category);
+                context.Categories.Add(c);
+                await context.SaveChangesAsync();
+                return RedirectToAction("Categories");
+            }
 
-            context.Add(category);
-            await context.SaveChangesAsync();
-            return RedirectToAction("Categories");
+            return View("Error", new ErrorViewModel());
+            
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTag(Tag tag)
+        public async Task<IActionResult> AddTag(AddTagViewModel tag)
         {
-            context.Add(tag);
-            await context.SaveChangesAsync();
-            return RedirectToAction("Tags");
+
+            if (ModelState.IsValid)
+            {
+                var t = _mapper.Map<Tag>(tag);
+                context.Tags.Add(t);
+                await context.SaveChangesAsync();
+                return RedirectToAction("Tags");
+            }
+            return RedirectToAction("Error",new ErrorViewModel());
         }
 
         public async Task<IActionResult> DeleteCategory(int id)

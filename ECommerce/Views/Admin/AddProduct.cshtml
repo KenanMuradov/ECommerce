@@ -4,13 +4,26 @@
     Layout = "_LayoutAdmin";
 }
 
-<form asp-action="AddProduct" asp-controller="Admin" method="post" enctype="multipart/form-data">
-    <input asp-for="Name" placeholder="Name" /> <br />
-    <textarea asp-for="Description" placeholder="Description...."></textarea> <br />
-    <input type="file" asp-for="ImageUrl" /><br />
-    <select asp-for="CategoryId" asp-items="@ViewBag.Categories"></select> <br />
-    <select multiple style="width:350px" asp-for="TagIds" asp-items="@ViewBag.Tags"></select>
-    <input type="submit" />
-</form>
-
+<div class="col-12">
+    <div class="bg-secondary rounded h-100 p-4">
+        <form asp-action="AddProduct" asp-controller="Admin" method="post" enctype="multipart/form-data">
+            <label for="name" class="form-label">Name</label>
+            <input asp-for="@Model.Name" class="form-control" id="name" /> 
+            <span asp-validation-for="@Model.Name"></span>
+            <label for="description" class="form-label">Description</label>
+            <textarea asp-for="@Model.Description" class="form-control" id="description"></textarea> 
+            <span asp-validation-for="@Model.Description"></span>
+            <label for="image" class="form-label">Image</label>
+            <input type="file" asp-for="@Model.ImageUrl" class="form-control mb-2 bg-dark" itemid="image" />
+            <span asp-validation-for="@Model.ImageUrl"></span>
+            <label for="categoryId" class="form-label">Category</label>
+            <select asp-for="@Model.CategoryId" class="form-select mb-2" asp-items="@ViewBag.Categories" id="categoryId"></select>
+            <span asp-validation-for="@Model.CategoryId"></span>
+            <label for="tagIds" class="form-label">Tags</label>
+            <select multiple style="width:350px" class="form-select mb-2" asp-for="@Model.TagIds" asp-items="@ViewBag.Tags" id="tagIds"></select>
+            <span asp-validation-for="@Model.TagIds"></span>
+            <button type="submit" class="btn btn-primary">Accept</button>
+        </form>
+    </div>
+</div>
 

@@ -4,16 +4,14 @@
     Layout = "_LayoutAdmin";
 }
 
-<a asp-controller="admin" asp-action="AddTag" class="btn btn-primary">Add new</a>
-
 <div class="list-group">
     @foreach (var t in Model)
     {
-        <div class="list-group-item list-group-item-action list-group-item-dark my-1 px-1">
+        <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-secondary my-1 px-2">
             <span>Tag Name: @t.Name</span>
             <span>
-                <a class="btn btn-primary" >Edit</a>
-                <a class="btn btn-primary" href="@Url.Action("DeleteTag","Admin",new {t.Id})">Delete</a>
+                <a class="btn btn-link" >Edit</a>
+                <a class="btn btn-link" href="@Url.Action("DeleteTag","Admin",new {t.Id})">Delete</a>
             </span>
 
         </div>
