@@ -4,17 +4,33 @@
     Layout = "_LayoutAdmin";
 }
 
-<div class="list-group">
-    @foreach (var t in Model)
-    {
-        <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-secondary my-1 px-2">
-            <span>Tag Name: @t.Name</span>
-            <span>
-                <a class="btn btn-link" >Edit</a>
-                <a class="btn btn-link" href="@Url.Action("DeleteTag","Admin",new {t.Id})">Delete</a>
-            </span>
 
-        </div>
-
-    }
+<div class="col-12">
+    <div class="bg-secondary rounded h-100 p-4">
+        <h6 class="mb-4">Hoverable Table</h6>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    <tr>
+                        <th scope="row">@t.Id</th>
+                        <td>@t.Name</td>
+                        <td>
+                            <span>
+                                <a class="btn btn-link" href="@Url.Action("EditTag","Admin",new {t.Id})">Edit</a>
+                                <a class="btn btn-link" href="@Url.Action("DeleteTag","Admin",new {t.Id})">Delete</a>
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

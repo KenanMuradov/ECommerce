@@ -1,6 +1,7 @@
 ﻿using ECommerce.Models.ViewModels;
 using ECommerce.Models;
 using AutoMapper;
+using ECommerce.Helpers;
 
 namespace ECommerce.Mappers
 {
@@ -12,7 +13,11 @@ namespace ECommerce.Mappers
                .ForMember(viewModel => viewModel.Name, opt => opt.MapFrom(viewModel => viewModel.Name))
                .ForMember(viewModel => viewModel.Description, opt => opt.MapFrom(viewModel => viewModel.Description))
                .ForMember(viewModel => viewModel.CategoryId, opt => opt.MapFrom(viewModel => viewModel.CategoryId))
-               .ReverseMap();
+               .AfterMap(async (viewModel, product) =>
+               {
+                   string path = await UploadFileHelper.UploadFile(viewModel.ImageUrl);
+                   product.ImageUrl = path;
+               });
         }
     }
 }

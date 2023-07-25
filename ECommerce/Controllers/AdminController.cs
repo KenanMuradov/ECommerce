@@ -21,7 +21,8 @@ namespace ECommerce.Controllers
 
         public IActionResult Index()
         {
-            return View("Products",context.Products.ToList());
+            var temp = context.Products.ToList();
+            return View(temp);
         }
 
         public IActionResult Categories()
@@ -56,10 +57,11 @@ namespace ECommerce.Controllers
         {
             try
             {
-                    string path = await UploadFileHelper.UploadFile(model.ImageUrl);
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
 
+                if (ModelState.IsValid)
+                {
                     Product product = _mapper.Map<Product>(model);
-                    product.ImageUrl = path;
 
                     context.Add(product);
                     await context.SaveChangesAsync();
@@ -72,7 +74,9 @@ namespace ECommerce.Controllers
 
                     await context.SaveChangesAsync();
 
-                    return View("Products", context.Products.ToList());
+                    return RedirectToAction("Index");
+                }
+                return View("Error", new ErrorViewModel());
             }
             catch (Exception)
             {
@@ -83,7 +87,7 @@ namespace ECommerce.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCategory(AddCategoryViewModel category)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var c = _mapper.Map<Category>(category);
                 context.Categories.Add(c);
@@ -92,7 +96,7 @@ namespace ECommerce.Controllers
             }
 
             return View("Error", new ErrorViewModel());
-            
+
         }
 
         [HttpPost]
@@ -106,7 +110,27 @@ namespace ECommerce.Controllers
                 await context.SaveChangesAsync();
                 return RedirectToAction("Tags");
             }
-            return RedirectToAction("Error",new ErrorViewModel());
+            return RedirectToAction("Error", new ErrorViewModel());
+        }
+
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            try
+            {
+                var p = context.Products.FirstOrDefault(x => x.Id == id);
+                if (p is not null)
+                {
+                    context.Remove(p);
+                    await context.SaveChangesAsync();
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+
+                return View("Error", new ErrorViewModel());
+            }
         }
 
         public async Task<IActionResult> DeleteCategory(int id)
@@ -125,9 +149,9 @@ namespace ECommerce.Controllers
             catch (Exception)
             {
 
-                return View("Error");
+                return View("Error", new ErrorViewModel());
             }
-            
+
         }
 
         public async Task<IActionResult> DeleteTag(int id)
@@ -146,8 +170,159 @@ namespace ECommerce.Controllers
             catch (Exception)
             {
 
-                return View("Error");
+                return View("Error", new ErrorViewModel());
             }
+        }
+
+        public IActionResult EditProduct(int id)
+        {
+            try
+            {
+                var p = context.Products.FirstOrDefault(p => p.Id == id);
+                if (p is not null)
+                {
+                    AddProductViewModel model = p;
+                    ViewBag.Categories = new SelectList(context.Categories, "Id", "Name");
+                    ViewBag.Tags = new MultiSelectList(context.Tags, "Id", "Name");
+                    ViewBag.Id = id;
+                    return View(model);
+                }
+                return View("Error", new ErrorViewModel());
+
+            }
+            catch (Exception)
+            {
+                return View("Error", new ErrorViewModel());
+            }
+        }
+
+        public IActionResult EditTag(int id)
+        {
+            try
+            {
+                var t = context.Tags.FirstOrDefault(t => t.Id == id);
+                if (t is not null)
+                {
+                    AddTagViewModel model = t;
+                    ViewBag.Id = id;
+                    return View(model);
+                }
+                return View("Error", new ErrorViewModel());
+
+            }
+            catch (Exception)
+            {
+                return View("Error", new ErrorViewModel());
+            }
+        }
+
+        public IActionResult EditCategory(int id)
+        {
+            try
+            {
+                var c = context.Categories.FirstOrDefault(c => c.Id == id);
+                if (c is not null)
+                {
+                    AddCategoryViewModel model = c;
+                    ViewBag.Id = id;
+                    return View(model);
+                }
+                return View("Error", new ErrorViewModel());
+
+            }
+            catch (Exception)
+            {
+                return View("Error", new ErrorViewModel());
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProduct(AddProductViewModel addProductViewModel, int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var p = context.Products.FirstOrDefault(p => p.Id == id);
+                    if (p is not null)
+                    {
+                        _mapper.Map(addProductViewModel, p);
+                        context.Update(p);
+                        await context.SaveChangesAsync();
+
+                        foreach (var pt in p.ProductTags)
+                            context.Remove(pt);
+                        await context.SaveChangesAsync();
+
+                        foreach (var tag in addProductViewModel.TagIds)
+                            context.Add(new ProductTag { TagId = tag, ProductId = p.Id });
+                        await context.SaveChangesAsync();
+
+                        return RedirectToAction("Index");
+                    }
+                    return View("Error", new ErrorViewModel());
+                }
+                return View("Error", new ErrorViewModel());
+            }
+            catch (Exception)
+            {
+                return View("Error", new ErrorViewModel());
+
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateTag(AddTagViewModel addTagViewModel, int id)
+        {
+            try
+            {
+                if(ModelState.IsValid)
+                {
+                    var t = context.Tags.FirstOrDefault(t => t.Id == id);
+                    if (t is not null)
+                    {
+                        _mapper.Map(addTagViewModel, t);
+                        context.Update(t);
+                        await context.SaveChangesAsync();
+                        return RedirectToAction("Tags");
+                    }
+                    return View("Error", new ErrorViewModel());
+                }
+                return View("Error", new ErrorViewModel());
+
+            }
+            catch (Exception)
+            {
+                return View("Error", new ErrorViewModel());
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCategory(AddCategoryViewModel addCategoryViewModel, int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var c = context.Categories.FirstOrDefault(c => c.Id == id);
+                    if (c is not null)
+                    {
+                        _mapper.Map(addCategoryViewModel, c);
+                        context.Update(c);
+                        await context.SaveChangesAsync();
+                        return RedirectToAction("Categories");
+                    }
+                    return View("Error", new ErrorViewModel());
+                }
+                return View("Error", new ErrorViewModel());
+
+            }
+            catch (Exception)
+            {
+                return View("Error", new ErrorViewModel());
+            }
+
         }
     }
 }
