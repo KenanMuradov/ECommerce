@@ -7,7 +7,7 @@
 <div class="col-12">
     <div class="bg-secondary rounded h-100 p-4">
         <h6 class="mb-4">Add Category</h6>
-        <form asp-controller="admin" asp-action="AddTag" method="post">
+        <form asp-controller="Home" asp-action="AddTag" method="post">
             <div class="mb-3">
                 <label for="name" class="form-label">Tag Name</label>
                 <input type="text" asp-for="@Model.Name" class="form-control" id="name" />

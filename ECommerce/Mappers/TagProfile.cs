@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using ECommerce.Models.ViewModels;
 using ECommerce.Models;
+using ECommerce.Models.ViewModels;
 
 namespace ECommerce.Mappers
 {

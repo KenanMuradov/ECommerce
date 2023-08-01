@@ -1,7 +1,7 @@
 ﻿@model List<Product>
 
 @{
-    Layout = "_LayoutAdmin";
+    Layout = "_layoutVisitor";
 }
 
 <div class="col-12">
@@ -38,8 +38,7 @@
                             </div>
                         </td>
                         <td>
-                            <a class="btn btn-link m-2" href="@Url.Action("EditProduct","Admin",new {p.Id})">Edit</a>
-                            <a class="btn btn-link m-2" href="@Url.Action("DeleteProduct","Admin",new {p.Id})">Delete</a>
+                            <a class="btn btn-link m-2" href="@Url.Action("AddToBasket","Home",new {p.Id})">Add To Chart</a>
                         </td>
                     </tr>
                 }

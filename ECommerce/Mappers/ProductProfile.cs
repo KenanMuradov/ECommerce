@@ -1,7 +1,7 @@
-﻿using ECommerce.Models.ViewModels;
-using ECommerce.Models;
+﻿using ECommerce.Models;
 using AutoMapper;
 using ECommerce.Helpers;
+using ECommerce.Models.ViewModels;
 
 namespace ECommerce.Mappers
 {
