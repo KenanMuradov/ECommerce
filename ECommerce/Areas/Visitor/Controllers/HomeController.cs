@@ -2,12 +2,14 @@
 using ECommerce.Data;
 using ECommerce.Models;
 using ECommerce.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
 namespace ECommerce.Areas.Visitor.Controllers
 {
     [Area("Visitor")]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly AppDbContext context;

@@ -1,9 +1,10 @@
 ﻿using ECommerce.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User>
     {
         public AppDbContext(DbContextOptions options) : base(options) { }
 
@@ -32,10 +33,13 @@ namespace ECommerce.Data
               .HasOne(pt => pt.Product)
               .WithMany(p => p.ProductTags)
               .HasForeignKey(pt => pt.ProductId);
+            
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

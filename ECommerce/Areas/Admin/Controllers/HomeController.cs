@@ -3,12 +3,14 @@ using ECommerce.Data;
 using ECommerce.Helpers;
 using ECommerce.Models;
 using ECommerce.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ECommerce.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly AppDbContext context;
